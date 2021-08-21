@@ -21,6 +21,8 @@ jobs:
           java-version: '11'
       - name: Tests
         run: sbt coverage circeJVM/test skunkJVM/It/test coverageReport coverageAggregate circeJS/test
+      - name: Codecov
+        uses: codecov/codecov-action@v2.0.2
   lint:
     name: ⚠️ Fatal warnings and code formatting
     runs-on: ubuntu-latest
