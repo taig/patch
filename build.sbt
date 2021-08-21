@@ -30,6 +30,17 @@ lazy val circe = crossProject(JVMPlatform, JSPlatform)
     name := "patch-circe"
   )
 
+lazy val circeGeneric = crossProject(JVMPlatform, JSPlatform)
+  .crossType(CrossType.Pure)
+  .in(file("modules/circe-generic"))
+  .settings(
+    libraryDependencies ++=
+      "com.chuusai" %%% "shapeless" % Version.Shapeless ::
+        Nil,
+    name := "patch-circe-generic"
+  )
+  .dependsOn(circe % "compile->compile;test->test")
+
 lazy val skunk = crossProject(JVMPlatform, JSPlatform)
   .crossType(CrossType.Full)
   .in(file("modules/skunk"))

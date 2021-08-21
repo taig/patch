@@ -1,9 +1,10 @@
-package io.taig.patch
+package io.taig.patch.circe
 
-import io.circe.{Decoder, DecodingFailure, Encoder, JsonObject}
 import cats.syntax.all._
+import io.circe.{Decoder, DecodingFailure, Encoder, JsonObject}
+import io.taig.patch.{JsonPatchDecoder, JsonPatchEncoder}
 
-object circe {
+trait instances {
   implicit def decoderListPatcher[A](implicit decoder: JsonPatchDecoder[A]): Decoder[List[A]] =
     Decoder.instance { cursor =>
       cursor.as[JsonObject].flatMap { json =>

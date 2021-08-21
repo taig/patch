@@ -6,3 +6,7 @@ import io.circe.{Decoder, Json}
 trait JsonPatchDecoder[A] {
   def decode(name: String, json: Json): Option[Decoder.Result[A]]
 }
+
+object JsonPatchDecoder {
+  def apply[A](implicit decoder: JsonPatchDecoder[A]): JsonPatchDecoder[A] = decoder
+}

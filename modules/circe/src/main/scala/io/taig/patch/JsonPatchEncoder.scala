@@ -6,3 +6,7 @@ import io.circe.Json
 trait JsonPatchEncoder[A] {
   def encode(value: A): (String, Json)
 }
+
+object JsonPatchEncoder {
+  def apply[A](implicit encoder: JsonPatchEncoder[A]): JsonPatchEncoder[A] = encoder
+}
