@@ -12,6 +12,7 @@
 ```scala
 libraryDependencies ++=
   "io.taig" %% "patch-circe" % "x.y.z" :: 
+  "io.taig" %% "patch-circe-generic" % "x.y.z" :: 
   "io.taig" %% "patch-skunk" % "x.y.z" :: 
   Nil
 ```

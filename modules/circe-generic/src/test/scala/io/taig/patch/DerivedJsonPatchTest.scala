@@ -21,4 +21,18 @@ final class DerivedJsonPatchTest extends FunSuite {
       expected = "name" -> Json.fromString("foo")
     )
   }
+
+  test("deriveCodec") {
+    val codec = circe.generic.deriveCodec[PersonJsonPatch]
+
+    assertEquals(
+      obtained = codec.decode("name", Json.fromString("foo")),
+      expected = Some(Right(PersonJsonPatch.Name("foo")))
+    )
+
+    assertEquals(
+      obtained = codec.encode(PersonJsonPatch.Name("foo")),
+      expected = "name" -> Json.fromString("foo")
+    )
+  }
 }
