@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+
+jobs:
+  test:
+    name: ✅ Unit & integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Cache
+        uses: coursier/cache-action@v6.1
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2.2.0
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Tests
+        run: sbt coverage circeJVM/test skunkJVM/It/test coverageReport coverageAggregate circeJS/test
+  lint:
+    name: ⚠️ Fatal warnings and code formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Cache
+        uses: coursier/cache-action@v6.1
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2.2.0
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Code formatting
+        run: sbt scalafmtCheckAll
+      - name: Fatal warnings
+        run: sbt -Dmode=strict It/compile
