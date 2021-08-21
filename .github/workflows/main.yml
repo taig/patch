@@ -1,0 +1,63 @@
+name: CI & CD
+
+on:
+  push:
+    branches:
+      - 'main'
+    tags:
+      - '*.*.*'
+
+jobs:
+  test:
+    name: ✅ Unit & integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Cache
+        uses: coursier/cache-action@v6.1
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2.2.0
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Tests
+        run: sbt coverage circeJVM/test skunkJVM/It/test coverageReport coverageAggregate circeJS/test
+  lint:
+    name: ⚠️ Fatal warnings and code formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Cache
+        uses: coursier/cache-action@v6.1
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2.2.0
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Code formatting
+        run: sbt scalafmtCheckAll
+      - name: Fatal warnings
+        run: sbt -Dmode=strict It/compile
+  deploy:
+    name: 🚀 Deploy
+    needs: [ test, lint ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Cache
+        uses: coursier/cache-action@v6.1
+      - name: Setup Java JDK
+        uses: actions/setup-java@v2.2.0
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Release
+        run: sbt ci-release
+        env:
+          PGP_PASSPHRASE: ${{secrets.PGP_PASSPHRASE}}
+          PGP_SECRET: ${{secrets.PGP_SECRET}}
+          SONATYPE_PASSWORD: ${{secrets.SONATYPE_PASSWORD}}
+          SONATYPE_USERNAME: ${{secrets.SONATYPE_USERNAME}}

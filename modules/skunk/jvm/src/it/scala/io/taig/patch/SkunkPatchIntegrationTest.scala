@@ -6,7 +6,7 @@ import io.taig.patch.util.Sessions
 import munit.CatsEffectSuite
 import skunk.codec.all._
 import skunk.implicits._
-import skunk.{~, AppliedFragment, Command, Encoder, Query, Void}
+import skunk.{~, AppliedFragment, Command, Query, Void}
 
 final class SkunkPatchIntegrationTest extends CatsEffectSuite {
   val createTable: Command[Void] =
