@@ -3,13 +3,18 @@ val Version = new {
   val EmbeddedPostgres = "1.3.1"
   val Munit = "0.7.28"
   val MunitCatsEffect = "1.0.5"
+  val Scala213 = "2.13.6"
   val Shapeless = "2.3.7"
   val Slf4j = "1.7.32"
   val Skunk = "0.2.2"
 }
 
+ThisBuild / developers := List(Developer("taig", "Niklas Klein", "mail@taig.io", url("https://taig.io/")))
 ThisBuild / dynverVTagPrefix := false
-ThisBuild / scalaVersion := "2.13.6"
+ThisBuild / homepage := Some(url("https://github.com/taig/patch/"))
+ThisBuild / licenses := List("MIT" -> url("https://raw.githubusercontent.com/taig/patch/main/LICENSE"))
+ThisBuild / scalaVersion := Version.Scala213
+ThisBuild / versionScheme := Some("early-semver")
 
 noPublishSettings
 name := "patch"
