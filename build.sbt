@@ -24,8 +24,7 @@ lazy val circe = crossProject(JVMPlatform, JSPlatform)
   .in(file("modules/circe"))
   .settings(
     libraryDependencies ++=
-      "com.chuusai" %%% "shapeless" % Version.Shapeless ::
-        "io.circe" %%% "circe-core" % Version.Circe ::
+      "io.circe" %%% "circe-core" % Version.Circe ::
         "org.scalameta" %%% "munit" % Version.Munit % "test" ::
         Nil,
     name := "patch-circe"
