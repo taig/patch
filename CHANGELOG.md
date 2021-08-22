@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.4
+
+_2021-08-22_
+
+ * `SkunkPatches.updateFragment` now takes a `NonEmptyList` and no longer returns an `Option`
+
 ## 0.0.3
 
 _2021-08-22_
