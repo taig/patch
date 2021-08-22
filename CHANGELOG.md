@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.3
+
+_2021-08-22_
+
+ * Return a `None` from `SkunkPatches.updateFragment` when the input list is empty
+
 ## 0.0.2
 
 _2021-08-21_
