@@ -54,7 +54,7 @@ final class SkunkPatchIntegrationTest extends CatsEffectSuite {
               case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.from("address", value, text.opt)
             }
           }
-          fragment = SkunkPatches.updateFragment(patches, encoder)
+          fragment <- SkunkPatches.updateFragment(patches, encoder).liftTo[IO](new IllegalStateException)
           _ <- session.prepare(updateMember(fragment)).use(_.execute(identifier))
           obtained <- session.prepare(selectMember).use(_.option(identifier))
         } yield assertEquals(
@@ -77,7 +77,7 @@ final class SkunkPatchIntegrationTest extends CatsEffectSuite {
             case PersonSkunkPatch.Age(value)     => SkunkPatchEncoder.Result.from("age", value, int2.opt)
             case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.from("address", value, text.opt)
           }
-          fragment = SkunkPatches.updateFragment(patches, encoder)
+          fragment <- SkunkPatches.updateFragment(patches, encoder).liftTo[IO](new IllegalStateException)
           _ <- session.prepare(updateMember(fragment)).use(_.execute(identifier))
           obtained <- session.prepare(selectMember).use(_.option(identifier))
         } yield assertEquals(

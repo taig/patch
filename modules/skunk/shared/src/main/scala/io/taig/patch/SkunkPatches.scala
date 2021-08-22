@@ -41,6 +41,6 @@ object SkunkPatches {
     }
   }
 
-  def updateFragment[A](patches: List[A], encoder: SkunkPatchEncoder[A]): AppliedFragment =
-    AppliedFragment(unsafeUpdateFragment(patches, encoder), patches)
+  def updateFragment[A](patches: List[A], encoder: SkunkPatchEncoder[A]): Option[AppliedFragment] =
+    Option.when(patches.nonEmpty)(AppliedFragment(unsafeUpdateFragment(patches, encoder), patches))
 }
