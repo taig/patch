@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.5
+
+_2021-08-22_
+
+ * Add more circe decoder instances
+
 ## 0.0.4
 
 _2021-08-22_
