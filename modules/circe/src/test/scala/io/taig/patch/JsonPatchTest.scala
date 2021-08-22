@@ -1,5 +1,6 @@
 package io.taig.patch
 
+import cats.data.NonEmptyList
 import io.circe.Decoder.Result
 import io.circe.Json
 import io.circe.syntax._
@@ -34,7 +35,15 @@ final class JsonPatchTest extends FunSuite {
     assertEquals(obtained = (PersonJsonPatch.Name("Angela Merte") :: patches).asJson, expected = json)
   }
 
+  test("encode: NonEmptyList") {
+    assertEquals(obtained = NonEmptyList.fromListUnsafe(patches).asJson, expected = json)
+  }
+
   test("decode") {
     assertEquals(obtained = json.as[List[PersonJsonPatch]], expected = Right(patches))
+  }
+
+  test("decode: NonEmptyList") {
+    assertEquals(obtained = json.as[NonEmptyList[PersonJsonPatch]].map(_.toList), expected = Right(patches))
   }
 }
