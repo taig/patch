@@ -4,7 +4,7 @@
 
 _2021-08-30_
 
- * Down yield a JSON decoding error on unknown fields, ignore them instead
+ * Don't yield a JSON decoding error on unknown fields, ignore them instead
 
 ## 0.0.5
 
