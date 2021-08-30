@@ -46,4 +46,8 @@ final class JsonPatchTest extends FunSuite {
   test("decode: NonEmptyList") {
     assertEquals(obtained = json.as[NonEmptyList[PersonJsonPatch]].map(_.toList), expected = Right(patches))
   }
+
+  test("decode: unknown field") {
+    assertEquals(obtained = Json.obj("foo" := "bar").as[List[PersonJsonPatch]], expected = Right(Nil))
+  }
 }
