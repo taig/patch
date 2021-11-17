@@ -1,6 +1,7 @@
 val Version = new {
   val Circe = "0.14.1"
   val EmbeddedPostgres = "1.3.1"
+  val EmbeddedPostgresBinary = "13.4.0"
   val Munit = "0.7.29"
   val MunitCatsEffect = "1.0.6"
   val Scala213 = "2.13.7"
@@ -55,5 +56,14 @@ lazy val skunk = crossProject(JVMPlatform, JSPlatform)
       "io.zonky.test" % "embedded-postgres" % Version.EmbeddedPostgres % "it" ::
         "org.slf4j" % "slf4j-nop" % Version.Slf4j % "it" ::
         "org.typelevel" %% "munit-cats-effect-3" % Version.MunitCatsEffect % "it" ::
-        Nil
+        Nil,
+    libraryDependencies += {
+      val platform = Option(System.getProperty("os.name")).map(_.toLowerCase) match {
+        case Some(os) if os.contains("mac") => "darwin"
+        case Some(os) if os.contains("win") => "windows"
+        case Some(_) | None                 => "linux"
+      }
+
+      "io.zonky.test.postgres" % s"embedded-postgres-binaries-$platform-amd64" % Version.EmbeddedPostgresBinary % "it"
+    },
   )
