@@ -1,7 +1,7 @@
 val Version = new {
   val Circe = "0.14.1"
   val EmbeddedPostgres = "1.3.1"
-  val Munit = "0.7.28"
+  val Munit = "0.7.29"
   val MunitCatsEffect = "1.0.5"
   val Scala213 = "2.13.7"
   val Shapeless = "2.3.7"
