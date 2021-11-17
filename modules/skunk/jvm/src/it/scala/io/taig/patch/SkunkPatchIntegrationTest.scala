@@ -48,12 +48,10 @@ final class SkunkPatchIntegrationTest extends CatsEffectSuite {
           _ <- session.execute(createTable)
           identifier <- session.prepare(insertMember).use(_.unique(Void))
           patches = NonEmptyList.of(PersonSkunkPatch.Name("Angela Merkel"), PersonSkunkPatch.Age(None))
-          encoder = new SkunkPatchEncoder[PersonSkunkPatch] {
-            override def encode(person: PersonSkunkPatch): SkunkPatchEncoder.Result = person match {
-              case PersonSkunkPatch.Name(value)    => SkunkPatchEncoder.Result.from("name", value, text)
-              case PersonSkunkPatch.Age(value)     => SkunkPatchEncoder.Result.from("age", value, int2.opt)
-              case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.from("address", value, text.opt)
-            }
+          encoder = SkunkPatchEncoder[PersonSkunkPatch] {
+            case PersonSkunkPatch.Name(value)    => SkunkPatchEncoder.Result.unsafe("name", value, text)
+            case PersonSkunkPatch.Age(value)     => SkunkPatchEncoder.Result.unsafe("age", value, int2.opt)
+            case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.unsafe("address", value, text.opt)
           }
           fragment = SkunkPatches.updateFragment(patches, encoder)
           _ <- session.prepare(updateMember(fragment)).use(_.execute(identifier))
@@ -74,9 +72,9 @@ final class SkunkPatchIntegrationTest extends CatsEffectSuite {
           identifier <- session.prepare(insertMember).use(_.unique(Void))
           patches = NonEmptyList.of(PersonSkunkPatch.Name("Angela Merte"), PersonSkunkPatch.Name("Angela Merkel"))
           encoder = SkunkPatchEncoder[PersonSkunkPatch] {
-            case PersonSkunkPatch.Name(value)    => SkunkPatchEncoder.Result.from("name", value, text)
-            case PersonSkunkPatch.Age(value)     => SkunkPatchEncoder.Result.from("age", value, int2.opt)
-            case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.from("address", value, text.opt)
+            case PersonSkunkPatch.Name(value)    => SkunkPatchEncoder.Result.unsafe("name", value, text)
+            case PersonSkunkPatch.Age(value)     => SkunkPatchEncoder.Result.unsafe("age", value, int2.opt)
+            case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.unsafe("address", value, text.opt)
           }
           fragment = SkunkPatches.updateFragment(patches, encoder)
           _ <- session.prepare(updateMember(fragment)).use(_.execute(identifier))

@@ -65,5 +65,5 @@ lazy val skunk = crossProject(JVMPlatform, JSPlatform)
       }
 
       "io.zonky.test.postgres" % s"embedded-postgres-binaries-$platform-amd64" % Version.EmbeddedPostgresBinary % "it"
-    },
+    }
   )
