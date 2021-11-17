@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.0
+
+_2021-11-17_
+
+ * Change SkunkPatchEncoder.Result to only expect single column encoders
+ * Upgrade embedded postgres binary
+ * Upgrade to munit-cats-effect 1.0.6
+ * Upgrade to munit 0.7.29
+ * Upgrade to scala 2.13.7
+ * Upgrade to sbt-scalajs 1.7.1
+ * Upgrade to sbt-houserules 0.3.15
+
 ## 0.0.6
 
 _2021-08-30_
