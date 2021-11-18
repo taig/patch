@@ -49,9 +49,9 @@ final class SkunkPatchIntegrationTest extends CatsEffectSuite {
           identifier <- session.prepare(insertMember).use(_.unique(Void))
           patches = NonEmptyList.of(PersonSkunkPatch.Name("Angela Merkel"), PersonSkunkPatch.Age(None))
           encoder = SkunkPatchEncoder[PersonSkunkPatch] {
-            case PersonSkunkPatch.Name(value)    => SkunkPatchEncoder.Result.unsafe("name", value, text)
-            case PersonSkunkPatch.Age(value)     => SkunkPatchEncoder.Result.unsafe("age", value, int2.opt)
-            case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.unsafe("address", value, text.opt)
+            case PersonSkunkPatch.Name(value)    => SkunkPatchEncoder.Result.unsafe("name")(value, text)
+            case PersonSkunkPatch.Age(value)     => SkunkPatchEncoder.Result.unsafe("age")(value, int2.opt)
+            case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.unsafe("address")(value, text.opt)
           }
           fragment = SkunkPatches.updateFragment(patches, encoder)
           _ <- session.prepare(updateMember(fragment)).use(_.execute(identifier))
@@ -72,9 +72,9 @@ final class SkunkPatchIntegrationTest extends CatsEffectSuite {
           identifier <- session.prepare(insertMember).use(_.unique(Void))
           patches = NonEmptyList.of(PersonSkunkPatch.Name("Angela Merte"), PersonSkunkPatch.Name("Angela Merkel"))
           encoder = SkunkPatchEncoder[PersonSkunkPatch] {
-            case PersonSkunkPatch.Name(value)    => SkunkPatchEncoder.Result.unsafe("name", value, text)
-            case PersonSkunkPatch.Age(value)     => SkunkPatchEncoder.Result.unsafe("age", value, int2.opt)
-            case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.unsafe("address", value, text.opt)
+            case PersonSkunkPatch.Name(value)    => SkunkPatchEncoder.Result.unsafe("name")(value, text)
+            case PersonSkunkPatch.Age(value)     => SkunkPatchEncoder.Result.unsafe("age")(value, int2.opt)
+            case PersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.unsafe("address")(value, text.opt)
           }
           fragment = SkunkPatches.updateFragment(patches, encoder)
           _ <- session.prepare(updateMember(fragment)).use(_.execute(identifier))
@@ -82,6 +82,32 @@ final class SkunkPatchIntegrationTest extends CatsEffectSuite {
         } yield assertEquals(
           obtained,
           expected = Some("Angela Merkel" ~ 55.toShort.some ~ Some("Willy-Brandt-Straße 1, 10557 Berlin"))
+        )
+      }
+    }
+  }
+
+  test("updateFragment: multiple fields") {
+    Sessions.embedded[IO].use { session =>
+      session.transaction.surround {
+        for {
+          _ <- session.execute(createTable)
+          identifier <- session.prepare(insertMember).use(_.unique(Void))
+          patches = NonEmptyList.of(
+            CombinedPersonSkunkPatch.NameAndAge(("Angela Merkel", none[Short])),
+            CombinedPersonSkunkPatch.Address(none[String])
+          )
+          encoder = SkunkPatchEncoder[CombinedPersonSkunkPatch] {
+            case CombinedPersonSkunkPatch.NameAndAge(value) =>
+              SkunkPatchEncoder.Result.unsafe("name", "age")(value, text ~ int2.opt)
+            case CombinedPersonSkunkPatch.Address(value) => SkunkPatchEncoder.Result.unsafe("address")(value, text.opt)
+          }
+          fragment = SkunkPatches.updateFragment(patches, encoder)
+          _ <- session.prepare(updateMember(fragment)).use(_.execute(identifier))
+          obtained <- session.prepare(selectMember).use(_.option(identifier))
+        } yield assertEquals(
+          obtained,
+          expected = Some("Angela Merkel" ~ none[Short] ~ none[String])
         )
       }
     }

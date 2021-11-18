@@ -9,7 +9,7 @@ import skunk.{AppliedFragment, Encoder, Fragment}
 object SkunkPatches {
   def unsafeUpdateFragment[A](patches: NonEmptyList[A], encoder: SkunkPatchEncoder[A]): Fragment[NonEmptyList[A]] = {
     val results = patches.toList
-      .map(encoder.encode)
+      .flatMap(encoder.encode(_).toList)
       .reverse
       .distinctBy(_.field)
       .reverse
