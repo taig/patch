@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0
+
+_2021-11-18_
+
+ *  Allow patching multiple database fields
+
 ## 0.1.0
 
 _2021-11-17_
